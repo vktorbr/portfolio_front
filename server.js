@@ -1,5 +1,7 @@
 const express = require('express');
 const nunjucks = require('nunjucks');
+const videos = require('./data');
+
 
 const server = express();
 
@@ -10,16 +12,32 @@ server.set('view engine', 'njk');
 
 //configuracao do nunjucks
 nunjucks.configure('views', {
-    express:server
+    express:server,
+    autoescape: false,
+    noCache: true 
 })
 
 server.get('/', function(req, res){
-    return res.render('about');
+    const about = {
+        avatar_url: 'https://avatars.githubusercontent.com/u/33494087?v=4',
+        name: 'Vktor Martins',
+        role: 'Desenvolvedor - Front-end',
+        description: 'Estudante de programação full-stack',
+        links: [
+            { name: 'Github', url: 'https://github.com/vktorbr' }, 
+            { name: 'Instagram', url: 'https://www.instagram.com/cabravitu/' },
+            { name: 'Linkedin', url: 'https://www.linkedin.com/in/vktorbr/' },
+        ]
+    }
+
+    return res.render('about', { about });
 })
 
 server.get('/portfolio', function(req, res){
-    return res.render('portfolio')
+    return res.render('portfolio', { items: videos });
 })
+
+
 
 server.listen(5000, function(){
     console.log('server is running');
